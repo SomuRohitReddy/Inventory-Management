@@ -1,0 +1,123 @@
+import java.util.*;
+import java.util.Scanner;
+
+// Product class represents individual products in the inventory
+class Product {
+    private int id;
+    private String name;
+    private int quantity;
+    private double price;
+
+    public Product(int id, String name, int quantity, double price) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    // Getters and setters
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+}
+
+// Inventory class manages the list of products
+class Inventory {
+    private List<Product> products;
+
+    public Inventory() {
+        products = new ArrayList<>();
+    }
+
+    // Add a new product to the inventory
+    public void addProduct(Product product) {
+        products.add(product);
+    }
+
+    // Search for a product by name
+    public Product findProductByName(String name) {
+        for (Product product : products) {
+            if (product.getName().equalsIgnoreCase(name)) {
+                return product;
+            }
+        }
+        return null;
+    }
+
+    // Update the quantity of a product
+    public void updateProductQuantity(String name, int quantity) {
+        Product product = findProductByName(name);
+        if (product != null) {
+            // Use the setter method to update the quantity
+            product.setQuantity(product.getQuantity() + quantity);
+        }
+    }
+
+    // Sell a product and update the quantity
+    public void sellProduct(String name, int quantity) {
+        Product product = findProductByName(name);
+        if (product != null && product.getQuantity() >= quantity) {
+            // Use the setter method to update the quantity
+            product.setQuantity(product.getQuantity() - quantity);
+            System.out.println("Sold " + quantity + " units of " + name);
+        } else {
+            System.out.println("Not enough stock for " + name);
+        }
+    }
+
+    // Getters and setters
+    public List<Product> getProducts() {
+        return products;
+    }
+}
+
+// Main class to demonstrate the inventory management system
+public class Main {
+    public static void main(String[] args) {
+        Inventory inventory = new Inventory();
+        Scanner scanner = new Scanner(System.in);
+
+        // Adding some sample products to the inventory
+        inventory.addProduct(new Product(1, "Apple", 100, 0.5));
+        inventory.addProduct(new Product(2, "Banana", 50, 0.3));
+        inventory.addProduct(new Product(3, "Orange", 75, 0.4));
+        inventory.addProduct(new Product(4, "grapes", 75, 0.4));
+        inventory.addProduct(new Product(5, "oreos", 200, 0.4));
+        inventory.addProduct(new Product(6, "chicken(7lbs)", 175, 0.4));
+       
+
+        // Selling products based on user input
+        System.out.println("Enter quantities to sell (0 if not selling):");
+        for (Product product : inventory.getProducts()) {
+            System.out.print("Enter quantity to sell for " + product.getName() + ": ");
+            int quantityToSell = scanner.nextInt();
+            if (quantityToSell > 0) {
+                inventory.sellProduct(product.getName(), quantityToSell);
+            }
+        }
+
+        // Displaying remaining inventory
+        System.out.println("Remaining inventory:");
+        for (Product product : inventory.getProducts()) {
+            System.out.println(product.getName() + ": " + product.getQuantity());
+        }
+        
+        scanner.close();
+    }
+}
